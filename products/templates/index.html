@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block context %}
+<div class="container mt-5 ">
+
+    <div class="row justify-content-center">
+        {% for product in products %}
+
+        <div class="col-2">
+            <a href="{{ product.get_absolute_url }}">
+            <img style="width:125px height:125px" src="{% thumbnail product.thumbnail 125x125 %}"></a>
+            <h1><a style="color:black; text-decoration:none;" href="{{ product.get_absolute_url }}">{{ product.name }}</a></h1>
+            <p>{{ product.description }}</p>
+            <p>{{ product.price }}</p>
+        </div>
+        <div class="col-1"></div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock context %}

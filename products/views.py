@@ -3,9 +3,8 @@ from django.views import generic, View
 from .models import Products, Images, Category
 from django.core.paginator import Paginator
 from django.contrib.postgres.search import SearchVector
-from django.forms import inlineformset_factory
 from .forms import ImageAddForm, ProductAddForm
-
+from django.forms import inlineformset_factory
 # Create your views here.
 
 
@@ -56,13 +55,41 @@ def product_details(request, pk):
 #     return render(request, 'search.html', context=context)
 
 
+# def productadd(request):
+#
+#     image_form = ImageAddForm()
+#     product_form = ProductAddForm()
+#     if request.method == 'POST':
+#         product_form = ProductAddForm(request.POST,files=request.FILES)
+#         if product_form.is_valid():
+#             product_instance=product_form.save(commit=False)
+#         image_form = ImageAddForm(request.POST, files=request.FILES)
+#         if image_form.is_valid():
+#             product_instance.save()
+#             image_form.save()
+#         else:
+#             return render(request, 'productadd.html')
+#
+#         return redirect(reverse('products:index'))
+#     context = {"image_form": image_form,
+#                "product_form": product_form}
+#     return render(request, 'productadd.html', context=context)
+
 def productadd(request):
-    image_form = ImageAddForm()
     product_form = ProductAddForm()
-    if request.method == 'POST':
+    image_formset = inlineformset_factory(Products,Images,fields=('image_path',))
+
+    if request.method =="POST":
+        product_form = ProductAddForm(request.POST, files=request.FILES)
+        if product_form.is_valid():
+            product_instance = product_form.save()
+        formset = image_formset(request.POST,files=request.FILES, instance=product_instance)
 
 
-        return redirect(reverse('products:index'))
-    context = {"image_form": image_form,
-               "product_form": product_form}
+        if formset.is_valid():
+            formset.save()
+            return redirect(reverse('products:index'))
+
+    context = {"image_formset": image_formset,
+                   "product_form": product_form}
     return render(request, 'productadd.html', context=context)

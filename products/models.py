@@ -53,7 +53,7 @@ class Category(models.Model):
 class Images(models.Model):
 
     image_path = models.ImageField(upload_to='products')
-    product = models.ForeignKey(Products, related_name='images', null=True,on_delete=models.SET_NULL)
+    product = models.ForeignKey(Products, related_name='images', null=True,on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'image'
